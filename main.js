@@ -73,6 +73,36 @@ function createAboutWindow() {
     });
 }
 
+function createSetProxyWindow() {
+    const setProxyWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        title: 'Set Proxy',
+        resizable: false,
+        minimizable: false,
+        maximizable: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        }
+    });
+
+    setProxyWindow.loadFile('setProxy.html');
+
+    ipcMain.handle('set-proxy', async (event, proxyUrl) => {
+        try {
+            await mainWindow.webContents.session.setProxy({ proxyRules: proxyUrl });
+            dialog.showMessageBox({
+                type: 'info',
+                message: 'Proxy set successfully',
+                buttons: ['OK']
+            });
+        } catch (error) {
+            dialog.showErrorBox('Failed to set proxy', error.message);
+        }
+    });
+}
+
 // 获取菜单模板
 function getMenuTemplate(localeData) {
     const template = [
@@ -82,7 +112,7 @@ function getMenuTemplate(localeData) {
                 {
                     label: localeData.Settings['Set Proxy'],
                     click: () => {
-                        setProxy();
+                        createSetProxyWindow();
                     }
                 }
             ]
@@ -123,7 +153,7 @@ function getMenuTemplate(localeData) {
                 { role: 'minimize', label: localeData.Window.minimize },
                 { role: 'close', label: localeData.Window.close }
             ]
-        },
+        }/* 暂时隐藏了解更多,
         {
             label: localeData.Help.label,
             submenu: [
@@ -135,7 +165,7 @@ function getMenuTemplate(localeData) {
                     }
                 }
             ]
-        }
+        }*/
     ];
 
     // 如果是 MacOS，添加应用菜单项
