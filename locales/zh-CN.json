@@ -31,5 +31,10 @@
     "Help": {
         "label": "帮助",
         "Learn More": "了解更多"
+    },
+    "About": {
+        "title": "关于 ChatGPT 应用",
+        "version": "版本: 1.0.0",
+        "description": "该应用由金城营造集团构建，版权归ChatGPT所有。"
     }
 }

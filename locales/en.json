@@ -31,5 +31,10 @@
     "Help": {
         "label": "Help",
         "Learn More": "Learn More"
+    },
+    "About": {
+        "title": "About ChatGPT App",
+        "version": "Version: 1.0.0",
+        "description": "The application was developed by kumshing Construction Group."
     }
 }

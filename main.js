@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const { app, BrowserWindow, Menu, session } = require('electron');
+const { app, BrowserWindow, Menu, session, ipcMain } = require('electron');
 
 let mainWindow;
 // 设置应用名称
@@ -46,6 +46,31 @@ function createWindow() {
 
     // 加载index.html
     mainWindow.loadFile('index.html');
+}
+
+/**
+ * 创建关于窗口
+ */
+function createAboutWindow() {
+    const aboutWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        title: 'About',
+        resizable: false,  // 禁止调整窗口大小
+        minimizable: false, // 禁止最小化
+        maximizable: false, // 禁止最大化
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        }
+    });
+
+    aboutWindow.loadFile('about.html'); // 加载自定义的关于页面
+
+    // 传递语言包数据给 about.html
+    aboutWindow.webContents.on('did-finish-load', () => {
+        aboutWindow.webContents.send('set-locale', localeData);
+    });
 }
 
 // 获取菜单模板
@@ -118,7 +143,7 @@ function getMenuTemplate(localeData) {
         template.unshift({
             label: appName, // 使用自定义的应用名称
             submenu: [
-                { role: 'about', label: `关于 ${appName}` },
+                { label: `关于 ${appName}`, click: createAboutWindow },
                 { type: 'separator' },
                 // 打开服务菜单
                 //{ role: 'services', submenu: [] },
