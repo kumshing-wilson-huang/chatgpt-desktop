@@ -1,0 +1,38 @@
+{
+    "File": {
+        "label": "文件",
+        "Open": "打开",
+        "Save": "保存",
+        "Exit": "退出"
+    },
+    "Edit": {
+        "label": "编辑",
+        "undo": "撤销",
+        "redo": "重做",
+        "cut": "剪切",
+        "copy": "复制",
+        "paste": "粘贴",
+        "delete": "删除",
+        "selectAll": "全选"
+    },
+    "View": {
+        "label": "查看",
+        "reload": "重新加载",
+        "forcereload": "强制重新加载",
+        "toggledevtools": "切换开发者工具",
+        "resetzoom": "重置缩放",
+        "zoomin": "放大",
+        "zoomout": "缩小",
+        "togglefullscreen": "切换全屏"
+    },
+    "Window": {
+        "label": "窗口",
+        "minimize": "最小化",
+        "close": "关闭"
+    },
+    "Help": {
+        "label": "帮助",
+        "Learn More": "了解更多",
+        "Set Proxy": "设置代理"
+    }
+}

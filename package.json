@@ -1,0 +1,57 @@
+{
+  "name": "chatgpt-desktop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kumshing-wilson-huang/chatgpt-desktop.git"
+  },
+  "keywords": [
+    "chatgpt",
+    "chatgpt-desktop"
+  ],
+  "author": "wilson.huang@kumshing.com.hk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kumshing-wilson-huang/chatgpt-desktop/issues"
+  },
+  "homepage": "https://github.com/kumshing-wilson-huang/chatgpt-desktop#readme",
+  "devDependencies": {
+    "electron": "^30.0.6",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "build": {
+    "appId": "hk.com.kumshing.chatgpt",
+    "productName": "ChatGPT",
+    "mac": {
+      "icon": "assets/chatgpt.icns",
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "files": [
+      "main.js",
+      "package.json",
+      "index.html",
+      "preload.js",
+      "locales/**/*",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "assets/",
+        "to": "assets",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+}

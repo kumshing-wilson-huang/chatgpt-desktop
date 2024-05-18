@@ -1,0 +1,33 @@
+{
+    "File": {
+        "Open": "Open",
+        "Save": "Save",
+        "Exit": "Exit"
+    },
+    "Edit": {
+        "undo": "Undo",
+        "redo": "Redo",
+        "cut": "Cut",
+        "copy": "Copy",
+        "paste": "Paste",
+        "delete": "Delete",
+        "selectAll": "Select All"
+    },
+    "View": {
+        "reload": "Reload",
+        "forcereload": "Force Reload",
+        "toggledevtools": "Toggle Developer Tools",
+        "resetzoom": "Reset Zoom",
+        "zoomin": "Zoom In",
+        "zoomout": "Zoom Out",
+        "togglefullscreen": "Toggle Full Screen"
+    },
+    "Window": {
+        "minimize": "Minimize",
+        "close": "Close"
+    },
+    "Help": {
+        "Learn More": "Learn More",
+        "Set Proxy": "Set Proxy"
+    }
+}
