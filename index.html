@@ -1,24 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT</title>
     <style>
-        body {
+        body,
+        html {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        webview {
-            width: 100vw;
-            height: 100vh;
+        #loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            z-index: 1000;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #content {
+            flex: 1;
+            display: none;
+            /* 隐藏内容，等加载完成后显示 */
         }
     </style>
 </head>
 
 <body>
-    <webview src="https://chatgpt.com/"></webview>
+    <div id="loader">
+        <div class="loader"></div>
+    </div>
+    <div id="content">
+        <!-- 主内容 -->
+        <webview id="webview" src="https://chatgpt.com" style="width: 100%; height: 100%;"></webview>
+    </div>
+    <script>
+        const { ipcRenderer } = require('electron');
+        const webview = document.getElementById('webview');
+        const loader = document.getElementById('loader');
+        const content = document.getElementById('content');
+
+        webview.addEventListener('did-finish-load', () => {
+            // 隐藏加载动画，显示主内容
+            loader.style.display = 'none';
+            content.style.display = 'block';
+        });
+    </script>
 </body>
 
 </html>

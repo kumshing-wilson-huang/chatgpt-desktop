@@ -2,9 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const { app, BrowserWindow, Menu, session } = require('electron');
 
+let mainWindow;
 // 设置应用名称
 const appName = 'ChatGPT'; // 修改为你的应用名称
-app.setName(appName); // 这通常对 Mac 左上角菜单无效，但在构建时有效
 
 // 语言选择，默认为英语
 let language = app.getLocale(); // 获取系统语言
@@ -18,10 +18,11 @@ require('electron-reload')(__dirname, {
 });
 
 function createWindow() {
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         icon: path.join(__dirname, 'assets', 'icon.icns'), // 设置图标
+        // fullscreen: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true,
@@ -32,6 +33,14 @@ function createWindow() {
 
     // 创建菜单
     const menuTemplate = getMenuTemplate(localeData);
+    // 在 macOS 上，添加一个空白菜单项以维持菜单的一致性
+    if (process.platform === 'darwin') {
+        menuTemplate.unshift({
+            label: null,
+            submenu: [],
+            visible: false // 将应用菜单项设置为不可见
+        });
+    }
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
 
@@ -43,27 +52,12 @@ function createWindow() {
 function getMenuTemplate(localeData) {
     const template = [
         {
-            label: localeData.File.label,
+            label: localeData.Settings.label,
             submenu: [
                 {
-                    label: localeData.File.Open,
+                    label: localeData.Settings['Set Proxy'],
                     click: () => {
-                        console.log('Open clicked');
-                        // 在这里添加你的打开文件逻辑
-                    }
-                },
-                {
-                    label: localeData.File.Save,
-                    click: () => {
-                        console.log('Save clicked');
-                        // 在这里添加你的保存文件逻辑
-                    }
-                },
-                { type: 'separator' },
-                {
-                    label: localeData.File.Exit,
-                    click: () => {
-                        app.quit();
+                        setProxy();
                     }
                 }
             ]
@@ -113,12 +107,6 @@ function getMenuTemplate(localeData) {
                     click: async () => {
                         const { shell } = require('electron');
                         await shell.openExternal('https://electronjs.org');
-                    }
-                },
-                {
-                    label: localeData.Help['Set Proxy'],
-                    click: () => {
-                        setProxy();
                     }
                 }
             ]
@@ -175,14 +163,17 @@ function setProxy() {
 
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {
+    createWindow();
+    if (mainWindow) {
+        mainWindow.maximize(); // 将窗口最大化
+        // mainWindow.setFullScreen(true); // 或者将窗口设置为全屏
+    }
     // 设置 Dock 图标
     if (process.platform === 'darwin') {
-        const iconPath = path.join(__dirname, 'assets', 'chatgpt.icns');
-        console.log(iconPath)
+        const iconPath = path.join(__dirname, 'assets', 'chatgpt.png');
         app.dock.setIcon(iconPath);
     }
-
-    createWindow();
+    app.setName(appName);
 });
 
 app.on('window-all-closed', () => {

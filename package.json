@@ -1,11 +1,12 @@
 {
   "name": "chatgpt-desktop",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "ChatGPT desktop version that can set up a proxy network",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -23,10 +24,12 @@
   "homepage": "https://github.com/kumshing-wilson-huang/chatgpt-desktop#readme",
   "devDependencies": {
     "electron": "^30.0.6",
+    "electron-builder": "^24.13.3",
+    "electron-builder-squirrel-windows": "^24.13.3",
     "electron-reload": "^2.0.0-alpha.1"
   },
   "build": {
-    "appId": "hk.com.kumshing.chatgpt",
+    "appId": "hk.com.kumshing.chatgpt-desktop",
     "productName": "ChatGPT",
     "mac": {
       "icon": "assets/chatgpt.icns",

@@ -1,9 +1,7 @@
 {
-    "File": {
-        "label": "文件",
-        "Open": "打开",
-        "Save": "保存",
-        "Exit": "退出"
+    "Settings": {
+        "label": "设置",
+        "Set Proxy": "设置代理"
     },
     "Edit": {
         "label": "编辑",
@@ -32,7 +30,6 @@
     },
     "Help": {
         "label": "帮助",
-        "Learn More": "了解更多",
-        "Set Proxy": "设置代理"
+        "Learn More": "了解更多"
     }
 }

@@ -1,10 +1,10 @@
 {
-    "File": {
-        "Open": "Open",
-        "Save": "Save",
-        "Exit": "Exit"
+    "Settings": {
+        "label": "Settings",
+        "Set Proxy": "Set Proxy"
     },
     "Edit": {
+        "label": "Eidt",
         "undo": "Undo",
         "redo": "Redo",
         "cut": "Cut",
@@ -14,6 +14,7 @@
         "selectAll": "Select All"
     },
     "View": {
+        "label": "View",
         "reload": "Reload",
         "forcereload": "Force Reload",
         "toggledevtools": "Toggle Developer Tools",
@@ -23,11 +24,12 @@
         "togglefullscreen": "Toggle Full Screen"
     },
     "Window": {
+        "label": "Window",
         "minimize": "Minimize",
         "close": "Close"
     },
     "Help": {
-        "Learn More": "Learn More",
-        "Set Proxy": "Set Proxy"
+        "label": "Help",
+        "Learn More": "Learn More"
     }
 }
