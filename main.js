@@ -1,6 +1,8 @@
 const path = require('path');
 const fs = require('fs');
-const { app, BrowserWindow, Menu, session, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
+const Store = require('electron-store');
+const store = new Store();
 
 let mainWindow;
 // 设置应用名称
@@ -89,9 +91,16 @@ function createSetProxyWindow() {
 
     setProxyWindow.loadFile('setProxy.html');
 
-    ipcMain.handle('set-proxy', async (event, proxyUrl) => {
+    ipcMain.handle('set-proxy', async (event, { proxyUrl, proxyPort, proxyType }) => {
         try {
-            await mainWindow.webContents.session.setProxy({ proxyRules: proxyUrl });
+            const proxyRules = `${proxyType}://${proxyUrl}:${proxyPort}`;
+            await mainWindow.webContents.session.setProxy({ proxyRules });
+            // 保存代理配置
+            store.set('proxyConfig', {
+                proxyUrl: proxyUrl,
+                proxyPort: proxyPort,
+                proxyType: proxyType
+            });
             dialog.showMessageBox({
                 type: 'info',
                 message: 'Proxy set successfully',
@@ -101,6 +110,7 @@ function createSetProxyWindow() {
             dialog.showErrorBox('Failed to set proxy', error.message);
         }
     });
+
 }
 
 // 获取菜单模板
@@ -204,17 +214,6 @@ function getMenuTemplate(localeData) {
     return template;
 }
 
-// 设置代理函数
-function setProxy() {
-    const proxyRules = 'http://your-proxy-server:port'; // 修改为你的代理服务器和端口
-    session.defaultSession.setProxy({ proxyRules })
-        .then(() => {
-            console.log('Proxy set successfully');
-        })
-        .catch(err => {
-            console.error('Failed to set proxy', err);
-        });
-}
 
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {

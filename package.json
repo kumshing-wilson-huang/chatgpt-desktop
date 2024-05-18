@@ -56,5 +56,8 @@
         ]
       }
     ]
+  },
+  "dependencies": {
+    "electron-store": "^9.0.0"
   }
 }
