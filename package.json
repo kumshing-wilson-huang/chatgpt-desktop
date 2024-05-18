@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-desktop",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ChatGPT desktop version that can set up a proxy network",
   "main": "main.js",
   "scripts": {
