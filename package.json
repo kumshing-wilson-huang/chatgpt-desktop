@@ -23,6 +23,9 @@
   },
   "homepage": "https://github.com/kumshing-wilson-huang/chatgpt-desktop#readme",
   "devDependencies": {
+    "@babel/cli": "^7.24.5",
+    "@babel/core": "^7.24.5",
+    "@babel/preset-env": "^7.24.5",
     "electron": "^30.0.6",
     "electron-builder": "^24.13.3",
     "electron-builder-squirrel-windows": "^24.13.3",
@@ -58,6 +61,6 @@
     ]
   },
   "dependencies": {
-    "electron-store": "^9.0.0"
+    "electron-store": "^7.0.3"
   }
 }

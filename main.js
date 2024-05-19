@@ -1,120 +1,18 @@
 const path = require('path');
-const fs = require('fs');
 const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
+const localeData = require('./locale');
+const preload = path.join(__dirname, 'preload.js');
 const Store = require('electron-store');
 const store = new Store();
-
-let mainWindow;
-// 设置应用名称
-const appName = 'ChatGPT'; // 修改为你的应用名称
-
-// 语言选择，默认为英语
-let language = app.getLocale(); // 获取系统语言
-if (!language) language = 'zh-CN';
-const localeFilePath = path.join(__dirname, `locales/${language}.json`);
-const localeData = JSON.parse(fs.readFileSync(localeFilePath, 'utf8'));
+const IS_DEV = true;
 
 // 启用 electron-reload 进行热重载
 require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 });
 
-function createWindow() {
-    mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        icon: path.join(__dirname, 'assets', 'icon.icns'), // 设置图标
-        // fullscreen: true,
-        webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
-            nodeIntegration: true,
-            contextIsolation: false,
-            webviewTag: true
-        }
-    });
-
-    // 创建菜单
-    const menuTemplate = getMenuTemplate(localeData);
-    // 在 macOS 上，添加一个空白菜单项以维持菜单的一致性
-    if (process.platform === 'darwin') {
-        menuTemplate.unshift({
-            label: null,
-            submenu: [],
-            visible: false // 将应用菜单项设置为不可见
-        });
-    }
-    const menu = Menu.buildFromTemplate(menuTemplate);
-    Menu.setApplicationMenu(menu);
-
-    // 加载index.html
-    mainWindow.loadFile('index.html');
-}
-
-/**
- * 创建关于窗口
- */
-function createAboutWindow() {
-    const aboutWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
-        title: 'About',
-        resizable: false,  // 禁止调整窗口大小
-        minimizable: false, // 禁止最小化
-        maximizable: false, // 禁止最大化
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        }
-    });
-
-    aboutWindow.loadFile('about.html'); // 加载自定义的关于页面
-
-    // 传递语言包数据给 about.html
-    aboutWindow.webContents.on('did-finish-load', () => {
-        aboutWindow.webContents.send('set-locale', localeData);
-    });
-}
-
-function createSetProxyWindow() {
-    const setProxyWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
-        title: 'Set Proxy',
-        resizable: false,
-        minimizable: false,
-        maximizable: false,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        }
-    });
-
-    setProxyWindow.loadFile('setProxy.html');
-
-    ipcMain.handle('set-proxy', async (event, { proxyUrl, proxyPort, proxyType }) => {
-        try {
-            const proxyRules = `${proxyType}://${proxyUrl}:${proxyPort}`;
-            await mainWindow.webContents.session.setProxy({ proxyRules });
-            // 保存代理配置
-            store.set('proxyConfig', {
-                proxyUrl: proxyUrl,
-                proxyPort: proxyPort,
-                proxyType: proxyType
-            });
-            dialog.showMessageBox({
-                type: 'info',
-                message: 'Proxy set successfully',
-                buttons: ['OK']
-            });
-        } catch (error) {
-            dialog.showErrorBox('Failed to set proxy', error.message);
-        }
-    });
-
-}
-
-// 获取菜单模板
-function getMenuTemplate(localeData) {
+// 获取主窗口菜单模板
+function getMenuTemplate() {
     const template = [
         {
             label: localeData.Settings.label,
@@ -181,18 +79,19 @@ function getMenuTemplate(localeData) {
     // 如果是 MacOS，添加应用菜单项
     if (process.platform === 'darwin') {
         template.unshift({
-            label: appName, // 使用自定义的应用名称
+            label: localeData.AppName.title, // 使用自定义的应用名称
             submenu: [
-                { label: `关于 ${appName}`, click: createAboutWindow },
+                { label: localeData.AppName.label, click: createAboutWindow },
                 { type: 'separator' },
                 // 打开服务菜单
                 //{ role: 'services', submenu: [] },
                 { type: 'separator' },
-                { role: 'hide', label: `隐藏 ${appName}` },
-                { role: 'hideothers', label: '隐藏其他' },
-                { role: 'unhide', label: '取消隐藏' },
+                { role: 'hide', label: localeData.AppName.hide },
+                { role: 'hideothers', label: localeData.AppName.hideothers },
+                { role: 'unhide', label: localeData.AppName.unhide },
+                // 分隔线
                 { type: 'separator' },
-                { role: 'quit', label: `退出 ${appName}` }
+                { role: 'quit', label: localeData.AppName.quit }
             ]
         });
 
@@ -202,10 +101,10 @@ function getMenuTemplate(localeData) {
             template.push({
                 role: 'window',
                 submenu: [
-                    { role: 'minimize', label: '最小化' },
-                    { role: 'zoom', label: '缩放' },
+                    { role: 'minimize', label: localeData.window.minimize },
+                    { role: 'zoom', label: localeData.window.zoom },
                     { type: 'separator' },
-                    { role: 'front', label: '全部移到前面' }
+                    { role: 'front', label: localeData.window.front }
                 ]
             });
         }
@@ -214,20 +113,130 @@ function getMenuTemplate(localeData) {
     return template;
 }
 
+/**
+ * 创建主窗口
+ */
+function createWindow() {
+    const mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        icon: path.join(__dirname, 'assets', 'chatgpt.png'), // 设置图标
+        // fullscreen: true,
+        webPreferences: {
+            preload: preload,
+            nodeIntegration: true,
+            contextIsolation: true,
+            webviewTag: true
+        }
+    });
+
+    // 打开开发者工具
+    if (IS_DEV) {
+        mainWindow.webContents.openDevTools();
+    }
+
+
+    // 创建菜单
+    const menuTemplate = getMenuTemplate();
+    // 在 macOS 上，添加一个空白菜单项以维持菜单的一致性
+    if (process.platform === 'darwin') {
+        menuTemplate.unshift({
+            label: null,
+            submenu: [],
+            visible: false // 将应用菜单项设置为不可见
+        });
+    }
+    const menu = Menu.buildFromTemplate(menuTemplate);
+    Menu.setApplicationMenu(menu);
+    mainWindow.maximize(); // 将窗口最大化
+
+    // 加载index.html
+    mainWindow.loadFile('index.html');
+
+    return mainWindow;
+}
+
+/**
+ * 创建关于窗口
+ */
+function createAboutWindow() {
+    const windowStatus = (IS_DEV ? true : false);
+    const aboutWindow = new BrowserWindow({
+        width: 500,
+        height: 300,
+        title: 'About',
+        resizable: windowStatus,  // 禁止调整窗口大小
+        minimizable: windowStatus, // 禁止最小化
+        maximizable: windowStatus, // 禁止最大化
+        webPreferences: {
+            preload: preload,
+            nodeIntegration: true,
+            contextIsolation: true,
+            webviewTag: true,
+        }
+    });
+
+    // 打开开发者工具
+    if (IS_DEV) {
+        //    aboutWindow.webContents.openDevTools();
+    }
+
+    aboutWindow.loadFile('about.html'); // 加载自定义的关于页面
+    return aboutWindow;
+}
+
+function createSetProxyWindow() {
+    const setProxyWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        title: 'Set Proxy',
+        resizable: false,
+        minimizable: false,
+        maximizable: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        }
+    });
+
+    setProxyWindow.loadFile('setProxy.html');
+
+    ipcMain.handle('set-proxy', async (event, { proxyUrl, proxyPort, proxyType }) => {
+        try {
+            // 保存代理配置
+            store.set('proxyConfig', {
+                proxyUrl: proxyUrl,
+                proxyPort: proxyPort,
+                proxyType: proxyType
+            });
+            dialog.showMessageBox({
+                type: 'info',
+                message: 'Proxy set successfully',
+                buttons: ['OK']
+            });
+        } catch (error) {
+            dialog.showErrorBox('Failed to set proxy', error.message);
+        }
+    });
+    return setProxyWindow;
+}
+
 
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {
+    // 在主进程中监听渲染进程发送的 'request-locale' 事件，并将本地化数据 localeData 发送给渲染进程
+    ipcMain.on('request-locale', (event) => {
+        event.sender.send('set-locale', localeData);
+    });
+
     createWindow();
-    if (mainWindow) {
-        mainWindow.maximize(); // 将窗口最大化
-        // mainWindow.setFullScreen(true); // 或者将窗口设置为全屏
-    }
+
     // 设置 Dock 图标
     if (process.platform === 'darwin') {
         const iconPath = path.join(__dirname, 'assets', 'chatgpt.png');
         app.dock.setIcon(iconPath);
     }
-    app.setName(appName);
+    app.setName(localeData.AppName.title);
 });
 
 app.on('window-all-closed', () => {

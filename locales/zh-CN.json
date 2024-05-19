@@ -26,15 +26,24 @@
     "Window": {
         "label": "窗口",
         "minimize": "最小化",
-        "close": "关闭"
+        "close": "关闭",
+        "zoom": "缩放",
+        "front": "全部移到前面"
     },
     "Help": {
         "label": "帮助",
         "Learn More": "了解更多"
     },
-    "About": {
-        "title": "关于 ChatGPT 应用",
-        "version": "版本: 1.0.0",
-        "description": "该应用由金城营造集团 ( kumshing.com.hk ) 员工构建，但内容版权归于 ChatGPT 所有，本应用只为方法使用代理网络使用 ChatGPT 而开发。"
+    "AppName": {
+        "title": "ChatGPT Desktop",
+        "label": "关于 ChatGPT Desktop",
+        "hide": "隐藏 ChatGPT Desktop",
+        "hideothers": "隐藏其他",
+        "unhide": "取消隐藏",
+        "quit": "退出 ChatGPT Desktop",
+        "About": {
+            "version": "版本: 1.0.0",
+            "description": "该应用由金城营造集团 ( kumshing.com.hk ) 员工构建，但内容版权归于 ChatGPT 所有，本应用只为方便用代理网络使用 ChatGPT 而开发。"
+        }
     }
 }
