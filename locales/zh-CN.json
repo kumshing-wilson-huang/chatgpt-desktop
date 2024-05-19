@@ -48,6 +48,12 @@
         }
     },
     "Proxy": {
-        "title": "代理设置"
+        "title": "代理设置",
+        "proxyType": "类型",
+        "proxyUrl": "地址",
+        "proxyPort": "端口",
+        "proxyDomain": "域",
+        "proxyUsername": "用户名",
+        "proxyPassword": "密码"
     }
 }

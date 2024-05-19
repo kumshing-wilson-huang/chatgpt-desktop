@@ -48,6 +48,12 @@
         }
     },
     "Proxy": {
-        "title": "Set Proxy"
+        "title": "Set Proxy",
+        "proxyType": "Proxy Type",
+        "proxyUrl": "Proxy Url",
+        "proxyPort": "Proxy Port",
+        "proxyDomain": "Proxy Domain",
+        "proxyUsername": "Proxy Username",
+        "proxyPassword": "Proxy Password"
     }
 }
