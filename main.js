@@ -205,28 +205,33 @@ function createSetProxyWindow() {
         }
     });
 
+    // 打开开发者工具
+    if (IS_DEV) {
+        setProxyWindow.webContents.openDevTools();
+    }
+
     setProxyWindow.loadFile('setProxy.html');
 
-    ipcMain.handle('set-proxy', async (event, { proxyUrl, proxyPort, proxyType }) => {
-        try {
-            // 保存代理配置
-            store.set('proxyConfig', {
-                proxyUrl: proxyUrl,
-                proxyPort: proxyPort,
-                proxyType: proxyType
-            });
-            dialog.showMessageBox({
-                type: 'info',
-                message: 'Proxy set successfully',
-                buttons: ['OK']
-            });
-        } catch (error) {
-            dialog.showErrorBox('Failed to set proxy', error.message);
-        }
-    });
+    /*
+ipcMain.handle('set-proxy', async (event, { proxyUrl, proxyPort, proxyType }) => {
+    try {
+        // 保存代理配置
+        store.set('proxyConfig', {
+            proxyUrl: proxyUrl,
+            proxyPort: proxyPort,
+            proxyType: proxyType
+        });
+        dialog.showMessageBox({
+            type: 'info',
+            message: 'Proxy set successfully',
+            buttons: ['OK']
+        });
+    } catch (error) {
+        dialog.showErrorBox('Failed to set proxy', error.message);
+    }
+});*/
     return setProxyWindow;
 }
-
 
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {

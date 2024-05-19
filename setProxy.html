@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Set Proxy</title>
+    <title id="title">Set Proxy</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,10 +37,19 @@
             background-color: #0056b3;
         }
     </style>
+    <script src="assets/jquery.min.js"></script>
 </head>
 
 <body>
-    <h1>Set Proxy</h1>
+    <h1 id="title-heading">Set Proxy</h1>
+
+    <div class="form-group">
+        <label for="proxyType">Proxy Type:</label>
+        <select id="proxyType">
+            <option value="http">HTTP</option>
+            <option value="socks5">SOCKS5</option>
+        </select>
+    </div>
     <div class="form-group">
         <label for="proxyUrl">Proxy URL:</label>
         <input type="text" id="proxyUrl" placeholder="Enter proxy URL">
@@ -50,21 +59,26 @@
         <input type="text" id="proxyPort" placeholder="Enter proxy port">
     </div>
     <div class="form-group">
-        <label for="proxyType">Proxy Type:</label>
-        <select id="proxyType">
-            <option value="http">HTTP</option>
-            <option value="socks5">SOCKS5</option>
-        </select>
+        <label for="proxyDomain">Domain:</label>
+        <input type="text" id="proxyDomain" placeholder="Enter domain">
+    </div>
+    <div class="form-group">
+        <label for="proxyUsername">Username:</label>
+        <input type="text" id="proxyUsername" placeholder="Enter username">
+    </div>
+    <div class="form-group">
+        <label for="proxyPassword">Password:</label>
+        <input type="password" id="proxyPassword" placeholder="Enter password">
     </div>
 
-    <button id="setProxyButton">Set Proxy</button>
+    <button id="save">Set Proxy</button>
 
     <script>
-        const { ipcRenderer } = require('electron');
-
-        document.getElementById('setProxyButton').addEventListener('click', () => {
-            const proxyUrl = document.getElementById('proxyUrl').value;
-            ipcRenderer.invoke('set-proxy', proxyUrl);
+        // 请求语言包数据
+        window.electron.requestLocale();
+        // 接收并设置语言包数据
+        window.electron.onSetLocale((localeData) => {
+            $('#save').text(localeData.Save);
         });
     </script>
 </body>

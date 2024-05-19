@@ -9,6 +9,7 @@
             margin: 20px;
         }
     </style>
+    <script src="assets/jquery.min.js"></script>
 </head>
 
 <body>
@@ -23,11 +24,10 @@
     window.electron.requestLocale();
     // 接收并设置语言包数据
     window.electron.onSetLocale((localeData) => {
-        //console.log(localeData);
-        document.getElementById('title').textContent = localeData.AppName.label;
-        document.getElementById('title-heading').textContent = localeData.AppName.label;
-        document.getElementById('version').textContent = localeData.AppName.About.version;
-        document.getElementById('description').textContent = localeData.AppName.About.description;
+        $("#title").text(localeData.AppName.label);
+        $("#title-heading").text(localeData.AppName.label);
+        $("#version").text(localeData.AppName.About.version);
+        $("#description").text(localeData.AppName.About.description);
     });
 </script>
 

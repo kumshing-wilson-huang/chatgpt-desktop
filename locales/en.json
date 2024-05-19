@@ -1,4 +1,5 @@
 {
+    "Save": "save",
     "Settings": {
         "label": "Settings",
         "Set Proxy": "Set Proxy"
@@ -45,5 +46,8 @@
             "version": "Version: 1.0.0",
             "description": "This application is built by employees of Kumshing Construction Group ( kumshing.com.hk ), but the copyright of the content belongs to ChatGPT. This application is only developed to facilitate the use of ChatGPT with proxy networks."
         }
+    },
+    "Proxy": {
+        "title": "Set Proxy"
     }
 }

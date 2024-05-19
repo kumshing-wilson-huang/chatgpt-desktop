@@ -1,4 +1,5 @@
 {
+    "Save": "保存",
     "Settings": {
         "label": "设置",
         "Set Proxy": "设置代理"
@@ -45,5 +46,8 @@
             "version": "版本: 1.0.0",
             "description": "该应用由金城营造集团 ( kumshing.com.hk ) 员工构建，但内容版权归于 ChatGPT 所有，本应用只为方便用代理网络使用 ChatGPT 而开发。"
         }
+    },
+    "Proxy": {
+        "title": "代理设置"
     }
 }

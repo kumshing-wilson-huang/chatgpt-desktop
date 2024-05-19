@@ -61,6 +61,7 @@
     ]
   },
   "dependencies": {
-    "electron-store": "^7.0.3"
+    "electron-store": "^7.0.3",
+    "jquery": "^3.7.1"
   }
 }
