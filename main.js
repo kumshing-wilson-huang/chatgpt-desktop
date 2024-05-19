@@ -126,7 +126,8 @@ function createWindow() {
             preload: preload,
             nodeIntegration: true,
             contextIsolation: true,
-            webviewTag: true
+            webviewTag: true,
+            devTools: (IS_DEV ? true : false)
         }
     });
 
@@ -173,12 +174,13 @@ function createAboutWindow() {
             nodeIntegration: true,
             contextIsolation: true,
             webviewTag: true,
+            devTools: (IS_DEV ? true : false)
         }
     });
 
     // 打开开发者工具
     if (IS_DEV) {
-        //    aboutWindow.webContents.openDevTools();
+        aboutWindow.webContents.openDevTools();
     }
 
     aboutWindow.loadFile('about.html'); // 加载自定义的关于页面
@@ -186,16 +188,20 @@ function createAboutWindow() {
 }
 
 function createSetProxyWindow() {
+    const windowStatus = (IS_DEV ? true : false);
     const setProxyWindow = new BrowserWindow({
-        width: 400,
+        width: 500,
         height: 300,
         title: 'Set Proxy',
-        resizable: false,
-        minimizable: false,
-        maximizable: false,
+        resizable: windowStatus,  // 禁止调整窗口大小
+        minimizable: windowStatus, // 禁止最小化
+        maximizable: windowStatus, // 禁止最大化
         webPreferences: {
+            preload: preload,
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: true,
+            webviewTag: true,
+            devTools: (IS_DEV ? true : false)
         }
     });
 
