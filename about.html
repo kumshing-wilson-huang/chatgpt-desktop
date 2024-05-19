@@ -15,18 +15,19 @@
     <h1 id="title-heading">About ChatGPT App</h1>
     <p id="version">Version: 1.0.0</p>
     <p id="description">This application is built using Electron.</p>
-    <p>&copy; 2024 ChatGPT. All rights reserved.</p>
+    <p>&copy; 2024 ( kumshing.com.hk ) All rights reserved.</p>
 </body>
 
 <script>
-    const { ipcRenderer } = require('electron');
-
-    // 监听从主进程传递的语言包数据
-    ipcRenderer.on('set-locale', (event, localeData) => {
-        document.getElementById('title').textContent = localeData.About.title;
-        document.getElementById('title-heading').textContent = localeData.About.title;
-        document.getElementById('version').textContent = localeData.About.version;
-        document.getElementById('description').textContent = localeData.About.description;
+    // 请求语言包数据
+    window.electron.requestLocale();
+    // 接收并设置语言包数据
+    window.electron.onSetLocale((localeData) => {
+        console.log(localeData);
+        document.getElementById('title').textContent = localeData.AppName.label;
+        document.getElementById('title-heading').textContent = localeData.AppName.label;
+        document.getElementById('version').textContent = localeData.AppName.About.version;
+        document.getElementById('description').textContent = localeData.AppName.About.description;
     });
 </script>
 
