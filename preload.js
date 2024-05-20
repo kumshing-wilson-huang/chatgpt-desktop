@@ -4,6 +4,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 console.log("Preload script loaded.");
 
+// 通过 contextBridge 将 IPC 方法暴露给渲染进程
 contextBridge.exposeInMainWorld('electron', {
     requestLocale: () => {
         // console.log("Requesting locale...");
@@ -15,5 +16,6 @@ contextBridge.exposeInMainWorld('electron', {
             // console.log("Locale data received in preload:", localeData);
             callback(localeData);
         });
-    }
+    },
+    showCustomDialog: (options) => ipcRenderer.send('show-custom-dialog', options)
 });

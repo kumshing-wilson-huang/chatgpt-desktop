@@ -1,5 +1,10 @@
 {
     "Save": "保存",
+    "Save Success": "保存成功",
+    "Dialog": {
+        "title": "提示信息",
+        "OK": "确定"
+    },
     "Settings": {
         "label": "设置",
         "Set Proxy": "设置代理"

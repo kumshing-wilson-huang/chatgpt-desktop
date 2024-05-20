@@ -11,6 +11,7 @@ require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 });
 
+
 // 获取主窗口菜单模板
 function getMenuTemplate() {
     const template = [
@@ -212,24 +213,6 @@ function createSetProxyWindow() {
 
     setProxyWindow.loadFile('setProxy.html');
 
-    /*
-ipcMain.handle('set-proxy', async (event, { proxyUrl, proxyPort, proxyType }) => {
-    try {
-        // 保存代理配置
-        store.set('proxyConfig', {
-            proxyUrl: proxyUrl,
-            proxyPort: proxyPort,
-            proxyType: proxyType
-        });
-        dialog.showMessageBox({
-            type: 'info',
-            message: 'Proxy set successfully',
-            buttons: ['OK']
-        });
-    } catch (error) {
-        dialog.showErrorBox('Failed to set proxy', error.message);
-    }
-});*/
     return setProxyWindow;
 }
 
@@ -238,6 +221,32 @@ app.on('ready', () => {
     // 在主进程中监听渲染进程发送的 'request-locale' 事件，并将本地化数据 localeData 发送给渲染进程
     ipcMain.on('request-locale', (event) => {
         event.sender.send('set-locale', localeData);
+    });
+
+    // 监听 'show-custom-dialog' 事件并处理传递的参数
+    ipcMain.on('show-custom-dialog', (event, options) => {
+        //console.log(event, options)
+        if(options && (typeof options == 'string')) {
+            options = { message: options };
+        }
+        if(!options) options = {};
+        if(!options.icon) {
+            options.icon = path.join(__dirname, 'assets', 'chatgpt.png');
+        }
+        if(!options.type) {
+            options.type = 'info';
+        }
+        if(!options.title) {
+            options.title = localeData.Dialog.title;
+        }
+        let buttons = [ localeData.Dialog.OK ];
+        if(options.buttons && (options.buttons.length > 0)) {
+            options.buttons = buttons.concat(options.buttons);
+        } else {
+            options.buttons = buttons;
+        }
+        //console.log(options)
+        dialog.showMessageBox(options);
     });
 
     createWindow();

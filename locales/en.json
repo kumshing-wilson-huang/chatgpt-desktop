@@ -1,5 +1,10 @@
 {
     "Save": "save",
+    "Save Success": "Saved successfully",
+    "Dialog": {
+        "title": "Message",
+        "OK": "OK"
+    },
     "Settings": {
         "label": "Settings",
         "Set Proxy": "Set Proxy"
