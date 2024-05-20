@@ -109,6 +109,15 @@ function getMenuTemplate() {
                 ]
             });
         }
+    } else {
+        template.unshift({
+            label: localeData.AppName.title, // 使用自定义的应用名称
+            submenu: [
+                { label: localeData.AppName.label, click: createAboutWindow },
+                { type: 'separator' },
+                { role: 'quit', label: localeData.AppName.quit }
+            ]
+        });
     }
 
     return template;
@@ -167,6 +176,8 @@ function createAboutWindow() {
         width: 500,
         height: 300,
         title: 'About',
+        icon: path.join(__dirname, 'assets', 'chatgpt.png'), // 设置图标
+        autoHideMenuBar: true, // 这里设置为 true 来隐藏菜单栏
         resizable: windowStatus,  // 禁止调整窗口大小
         minimizable: windowStatus, // 禁止最小化
         maximizable: windowStatus, // 禁止最大化
@@ -194,9 +205,11 @@ function createSetProxyWindow() {
         width: 500,
         height: 300,
         title: 'Set Proxy',
+        icon: path.join(__dirname, 'assets', 'chatgpt.png'), // 设置图标
         resizable: windowStatus,  // 禁止调整窗口大小
         minimizable: windowStatus, // 禁止最小化
         maximizable: windowStatus, // 禁止最大化
+        autoHideMenuBar: true, // 这里设置为 true 来隐藏菜单栏
         webPreferences: {
             preload: preload,
             nodeIntegration: true,
