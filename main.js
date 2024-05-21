@@ -1,15 +1,16 @@
 const path = require('path');
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, session } = require('electron');
 const localeData = require('./locale');
 const preload = path.join(__dirname, 'preload.js');
 const Store = require('electron-store');
 const store = new Store();
 const IS_DEV = true;
 
+/*
 // 启用 electron-reload 进行热重载
 require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-});
+}); */
 
 
 // 获取主窗口菜单模板
@@ -229,6 +230,27 @@ function createSetProxyWindow() {
     return setProxyWindow;
 }
 
+// 设置代理配置
+async function setProxyConfig(proxyConfig) {
+    const { proxyType, proxyUrl, proxyPort, proxyDomain, proxyUsername, proxyPassword } = proxyConfig;
+    const proxyRules = `${proxyType}=${proxyUrl}:${proxyPort};https=${proxyUrl}:${proxyPort}`;
+    const proxyCredentials = proxyUsername && proxyPassword ? `${proxyUsername}:${proxyPassword}` : null;
+  
+    // 设置代理
+    await session.defaultSession.setProxy({
+      proxyRules,
+      proxyBypassRules: '<-loopback>'
+    });
+  
+    // 如果代理需要认证
+    if (proxyCredentials) {
+      session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+        details.requestHeaders['Proxy-Authorization'] = 'Basic ' + Buffer.from(proxyCredentials).toString('base64');
+        callback({ cancel: false, requestHeaders: details.requestHeaders });
+      });
+    }
+  }
+
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {
     // 在主进程中监听渲染进程发送的 'request-locale' 事件，并将本地化数据 localeData 发送给渲染进程
@@ -261,6 +283,23 @@ app.on('ready', () => {
         //console.log(options)
         dialog.showMessageBox(options);
     });
+
+    // 监听 'save-proxy-configs' 事件并处理传递的参数
+    ipcMain.on('save-proxy-configs', (event, configs) => {
+        // console.log(configs)
+        store.set('proxyConfig', configs);
+        setProxyConfig(configs);
+        // 发送触发 callback 的事件给渲染进程
+        event.sender.send('save-configs', configs);
+    });
+
+    // 设置代理配置
+    const proxyConfig = store.get('proxyConfig');
+    console.log(proxyConfig);
+    if(proxyConfig && Object.keys(proxyConfig) > 0) {
+        console.log('setProxyConfig');
+        setProxyConfig(proxyConfig);
+    }
 
     createWindow();
 

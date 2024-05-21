@@ -17,5 +17,13 @@ contextBridge.exposeInMainWorld('electron', {
             callback(localeData);
         });
     },
-    showCustomDialog: (options) => ipcRenderer.send('show-custom-dialog', options)
+    showCustomDialog: (options) => ipcRenderer.send('show-custom-dialog', options),
+    saveProxyConfigs: (configs, callback) => {
+        // 告诉主进程保存代理
+        ipcRenderer.send('save-proxy-configs', configs);
+        // 当主进程保存成功返回执行一个callback
+        ipcRenderer.on('save-configs', (configs) => {
+            callback(configs);
+        });
+    }
 });

@@ -75,6 +75,7 @@
     </form>
 
     <script>
+        //console.log(window.electron);
         // 请求语言包数据
         window.electron.requestLocale();
         // 接收并设置语言包数据
@@ -106,11 +107,14 @@
                 let formData = {};
                 formDataArray.map(item => {
                     formData[item.name] = item.value;
-                })
+                })                
                 //console.log(formData)
                 localStorage.setItem("Proxy", JSON.stringify(formData));
                 //alert(localeData['Save Success']);
-                window.electron.showCustomDialog(localeData['Save Success']);
+                window.electron.saveProxyConfigs(formData, () => {
+                    window.electron.showCustomDialog(localeData['Save Success']);
+                });
+                
                 return false;
             });
         });
