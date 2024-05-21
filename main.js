@@ -236,6 +236,7 @@ async function setProxyConfig(proxyConfig) {
     const proxyRules = `${proxyType}=${proxyUrl}:${proxyPort};https=${proxyUrl}:${proxyPort}`;
     const proxyCredentials = proxyUsername && proxyPassword ? `${proxyUsername}:${proxyPassword}` : null;
   
+    //console.log(proxyRules)
     // 设置代理
     await session.defaultSession.setProxy({
       proxyRules,
@@ -295,9 +296,9 @@ app.on('ready', () => {
 
     // 设置代理配置
     const proxyConfig = store.get('proxyConfig');
-    console.log(proxyConfig);
-    if(proxyConfig && Object.keys(proxyConfig) > 0) {
-        console.log('setProxyConfig');
+    //console.log(proxyConfig);
+    if(proxyConfig && (Object.keys(proxyConfig).length > 0)) {
+        //console.log('setProxyConfig');
         setProxyConfig(proxyConfig);
     }
 
