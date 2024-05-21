@@ -49,7 +49,7 @@
         "quit": "Exit ChatGPT Desktop",
         "About": {
             "version": "Version: 1.0.0",
-            "description": "This application is built by employees of Kumshing Construction Group ( kumshing.com.hk ), but the copyright of the content belongs to ChatGPT. This application is only developed to facilitate the use of ChatGPT with proxy networks."
+            "description": "This app was developed by an employee of Kumshing Construction Group ( wilson.huang@kumshing.com.hk ), but the copyright of the content belongs to ChatGPT. This app is only developed to facilitate the use of ChatGPT with a proxy network."
         }
     },
     "Proxy": {

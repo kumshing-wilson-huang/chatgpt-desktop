@@ -26,6 +26,7 @@
     "@babel/cli": "^7.24.5",
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
+    "@electron-forge/cli": "^7.4.0",
     "electron": "^30.0.6",
     "electron-builder": "^24.13.3",
     "electron-builder-squirrel-windows": "^24.13.3",
@@ -33,7 +34,7 @@
   },
   "build": {
     "appId": "hk.com.kumshing.chatgpt-desktop",
-    "productName": "ChatGPT",
+    "productName": "ChatGPT Desktop",
     "mac": {
       "icon": "assets/chatgpt.icns",
       "category": "public.app-category.productivity",
@@ -46,6 +47,9 @@
       "main.js",
       "package.json",
       "index.html",
+      "about.html",
+      "setProxy.html",
+      "locale.js",
       "preload.js",
       "locales/**/*",
       "assets/**/*"
@@ -62,6 +66,7 @@
   },
   "dependencies": {
     "electron-store": "^7.0.3",
-    "jquery": "^3.7.1"
+    "jquery": "^3.7.1",
+    "path-scurry": "^1.11.1"
   }
 }
