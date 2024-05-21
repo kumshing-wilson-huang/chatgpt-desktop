@@ -5,12 +5,13 @@ const preload = path.join(__dirname, 'preload.js');
 const Store = require('electron-store');
 const store = new Store();
 const IS_DEV = true;
-
-/*
-// 启用 electron-reload 进行热重载
-require('electron-reload')(__dirname, {
-    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-}); */
+let mainWindow = null;
+let setProxyWindow = null;
+    /*
+    // 启用 electron-reload 进行热重载
+    require('electron-reload')(__dirname, {
+        electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+    }); */
 
 
 // 获取主窗口菜单模板
@@ -128,10 +129,11 @@ function getMenuTemplate() {
  * 创建主窗口
  */
 function createWindow() {
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         icon: path.join(__dirname, 'assets', 'chatgpt.png'), // 设置图标
+        title: localeData.AppName.title,
         // fullscreen: true,
         webPreferences: {
             preload: preload,
@@ -164,6 +166,11 @@ function createWindow() {
 
     // 加载index.html
     mainWindow.loadFile('index.html');
+
+    // 监听窗口关闭事件
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
 
     return mainWindow;
 }
@@ -202,7 +209,7 @@ function createAboutWindow() {
 
 function createSetProxyWindow() {
     const windowStatus = (IS_DEV ? true : false);
-    const setProxyWindow = new BrowserWindow({
+    setProxyWindow = new BrowserWindow({
         width: 500,
         height: 300,
         title: 'Set Proxy',
@@ -235,20 +242,26 @@ async function setProxyConfig(proxyConfig) {
     const { proxyType, proxyUrl, proxyPort, proxyDomain, proxyUsername, proxyPassword } = proxyConfig;
     const proxyRules = `${proxyType}=${proxyUrl}:${proxyPort};https=${proxyUrl}:${proxyPort}`;
     const proxyCredentials = proxyUsername && proxyPassword ? `${proxyUsername}:${proxyPassword}` : null;
-  
+
     //console.log(proxyRules)
     // 设置代理
     await session.defaultSession.setProxy({
       proxyRules,
       proxyBypassRules: '<-loopback>'
     });
-  
+
     // 如果代理需要认证
     if (proxyCredentials) {
       session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
         details.requestHeaders['Proxy-Authorization'] = 'Basic ' + Buffer.from(proxyCredentials).toString('base64');
         callback({ cancel: false, requestHeaders: details.requestHeaders });
       });
+    }
+
+    // 设置完后关闭设置窗口并刷新主窗口webview
+    if(setProxyWindow) {
+        setProxyWindow.close();
+        mainWindow && mainWindow.webContents.reload();
     }
   }
 
@@ -303,13 +316,41 @@ app.on('ready', () => {
     }
 
     createWindow();
+    app.setName(localeData.AppName.title);
 
     // 设置 Dock 图标
     if (process.platform === 'darwin') {
         const iconPath = path.join(__dirname, 'assets', 'chatgpt.png');
         app.dock.setIcon(iconPath);
+
+        /*
+        // 设置 Dock 图标提示文本
+        const dockMenu = Menu.buildFromTemplate([
+            {
+                label: 'New Window',
+                click() {
+                    console.log('New Window');
+                    // 在这里添加创建新窗口的逻辑
+                }
+            },
+            {
+                label: 'Settings',
+                click() {
+                    console.log('Open Settings');
+                    // 在这里添加打开设置窗口的逻辑
+                }
+            },
+            {
+                label: 'Quit',
+                click() {
+                    app.quit();
+                }
+            }
+        ]);
+        app.dock.setMenu(dockMenu);
+
+         */
     }
-    app.setName(localeData.AppName.title);
 });
 
 app.on('window-all-closed', () => {
