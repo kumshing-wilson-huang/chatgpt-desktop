@@ -1,0 +1,30 @@
+directories:
+  output: dist
+  buildResources: build
+appId: hk.com.kumshing.chatgpt-desktop
+productName: ChatGPT Desktop
+mac:
+  icon: assets/chatgpt-512x512.png
+  category: public.app-category.productivity
+  target:
+    - dmg
+    - zip
+win:
+  icon: assets/chatgpt-512x512.png
+files:
+  - filter:
+      - main.js
+      - package.json
+      - index.html
+      - about.html
+      - setProxy.html
+      - locale.js
+      - preload.js
+      - locales/**/*
+      - assets/**/*
+extraResources:
+  - from: assets/
+    to: assets
+    filter:
+      - '**/*'
+electronVersion: 30.0.6
