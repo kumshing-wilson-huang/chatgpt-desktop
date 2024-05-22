@@ -46,7 +46,7 @@
     "win": {
       "icon": "assets/chatgpt-512x512.png",
       "target": [
-        "exe",
+        "nsis",
         "zip"
       ]
     },
