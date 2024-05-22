@@ -4,14 +4,14 @@ const localeData = require('./locale');
 const preload = path.join(__dirname, 'preload.js');
 const Store = require('electron-store');
 const store = new Store();
-const IS_DEV = true;
+const IS_DEV = false;
 let mainWindow = null;
 let setProxyWindow = null;
-    /*
-    // 启用 electron-reload 进行热重载
-    require('electron-reload')(__dirname, {
-        electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-    }); */
+/*
+// 启用 electron-reload 进行热重载
+require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+}); */
 
 
 // 获取主窗口菜单模板
@@ -246,16 +246,16 @@ async function setProxyConfig(proxyConfig) {
     //console.log(proxyRules)
     // 设置代理
     await session.defaultSession.setProxy({
-      proxyRules,
-      proxyBypassRules: '<-loopback>'
+        proxyRules,
+        proxyBypassRules: '<-loopback>'
     });
 
     // 如果代理需要认证
     if (proxyCredentials) {
-      session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-        details.requestHeaders['Proxy-Authorization'] = 'Basic ' + Buffer.from(proxyCredentials).toString('base64');
-        callback({ cancel: false, requestHeaders: details.requestHeaders });
-      });
+        session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+            details.requestHeaders['Proxy-Authorization'] = 'Basic ' + Buffer.from(proxyCredentials).toString('base64');
+            callback({ cancel: false, requestHeaders: details.requestHeaders });
+        });
     }
 
     // 设置完后关闭设置窗口并刷新主窗口webview
@@ -263,7 +263,7 @@ async function setProxyConfig(proxyConfig) {
         setProxyWindow.close();
         mainWindow && mainWindow.webContents.reload();
     }
-  }
+}
 
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {
