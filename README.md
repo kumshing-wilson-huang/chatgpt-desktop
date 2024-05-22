@@ -1,4 +1,4 @@
-# ChatGPT desktop version
+# ChatGPT desktop version ![GitHub Release](https://img.shields.io/github/v/release/kumshing-wilson-huang/chatgpt-desktop)
 
 - 该应用只为允许使用代理上网去访问ChatGPT而创建
 - This application is created only to allow the use of proxy Internet access to access ChatGPT
