@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-desktop",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "ChatGPT desktop version that can set up a proxy network",
   "main": "main.js",
   "scripts": {
@@ -36,15 +36,12 @@
     "appId": "hk.com.kumshing.chatgpt-desktop",
     "productName": "ChatGPT Desktop",
     "mac": {
-      "icon": "assets/chatgpt-512x512.png",
+      "icon": "assets/chatgpt.icns",
       "category": "public.app-category.productivity",
       "target": [
         "dmg",
         "zip"
       ]
-    },
-    "win": {
-      "icon": "assets/chatgpt-512x512.png"
     },
     "files": [
       "main.js",
