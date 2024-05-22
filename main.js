@@ -7,6 +7,7 @@ const store = new Store();
 const IS_DEV = false;
 let mainWindow = null;
 let setProxyWindow = null;
+const iconPath = path.join(__dirname, 'assets', 'chatgpt.png');
 /*
 // 启用 electron-reload 进行热重载
 require('electron-reload')(__dirname, {
@@ -132,7 +133,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        icon: path.join(__dirname, 'assets', 'chatgpt.png'), // 设置图标
+        icon: iconPath, // 设置图标
         title: localeData.AppName.title,
         // fullscreen: true,
         webPreferences: {
@@ -184,7 +185,7 @@ function createAboutWindow() {
         width: 500,
         height: 300,
         title: 'About',
-        icon: path.join(__dirname, 'assets', 'chatgpt.png'), // 设置图标
+        icon: iconPath, // 设置图标
         autoHideMenuBar: true, // 这里设置为 true 来隐藏菜单栏
         resizable: windowStatus,  // 禁止调整窗口大小
         minimizable: windowStatus, // 禁止最小化
@@ -213,7 +214,7 @@ function createSetProxyWindow() {
         width: 500,
         height: 300,
         title: 'Set Proxy',
-        icon: path.join(__dirname, 'assets', 'chatgpt.png'), // 设置图标
+        icon: iconPath, // 设置图标
         resizable: windowStatus,  // 禁止调整窗口大小
         minimizable: windowStatus, // 禁止最小化
         maximizable: windowStatus, // 禁止最大化
@@ -280,7 +281,7 @@ app.on('ready', () => {
         }
         if(!options) options = {};
         if(!options.icon) {
-            options.icon = path.join(__dirname, 'assets', 'chatgpt.png');
+            options.icon = iconPath;
         }
         if(!options.type) {
             options.type = 'info';
@@ -320,36 +321,7 @@ app.on('ready', () => {
 
     // 设置 Dock 图标
     if (process.platform === 'darwin') {
-        const iconPath = path.join(__dirname, 'assets', 'chatgpt.png');
         app.dock.setIcon(iconPath);
-
-        /*
-        // 设置 Dock 图标提示文本
-        const dockMenu = Menu.buildFromTemplate([
-            {
-                label: 'New Window',
-                click() {
-                    console.log('New Window');
-                    // 在这里添加创建新窗口的逻辑
-                }
-            },
-            {
-                label: 'Settings',
-                click() {
-                    console.log('Open Settings');
-                    // 在这里添加打开设置窗口的逻辑
-                }
-            },
-            {
-                label: 'Quit',
-                click() {
-                    app.quit();
-                }
-            }
-        ]);
-        app.dock.setMenu(dockMenu);
-
-         */
     }
 });
 
