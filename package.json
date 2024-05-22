@@ -51,23 +51,21 @@
       ]
     },
     "files": [
+      "about.html",
+      "index.html",
+      "locale.js",
       "main.js",
       "package.json",
-      "index.html",
-      "about.html",
-      "setProxy.html",
-      "locale.js",
       "preload.js",
-      "locales/*",
-      "assets/*"
+      "setProxy.html",
+      "locales/**/*",
+      "assets/**/*"
     ],
     "extraResources": [
       {
-        "from": "assets/",
-        "to": "assets",
-        "filter": [
-          "**/*"
-        ]
+        "from": "assets/**/*",
+        "to": "assets/**/*",
+        "filter": ["**/*"]
       }
     ]
   },
