@@ -268,6 +268,12 @@ async function setProxyConfig(proxyConfig) {
 
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {
+    app.setName(localeData.AppName.title);
+
+    // 设置 Dock 图标
+    if (process.platform === 'darwin') {
+        app.dock.setIcon(iconPath);
+    }
     // 在主进程中监听渲染进程发送的 'request-locale' 事件，并将本地化数据 localeData 发送给渲染进程
     ipcMain.on('request-locale', (event) => {
         event.sender.send('set-locale', localeData);
@@ -317,12 +323,6 @@ app.on('ready', () => {
     }
 
     createWindow();
-    app.setName(localeData.AppName.title);
-
-    // 设置 Dock 图标
-    if (process.platform === 'darwin') {
-        app.dock.setIcon(iconPath);
-    }
 });
 
 app.on('window-all-closed', () => {

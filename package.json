@@ -36,10 +36,17 @@
     "appId": "hk.com.kumshing.chatgpt-desktop",
     "productName": "ChatGPT Desktop",
     "mac": {
-      "icon": "assets/chatgpt.icns",
+      "icon": "assets/chatgpt-512x512.png",
       "category": "public.app-category.productivity",
       "target": [
         "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "assets/chatgpt-512x512.png",
+      "target": [
+        "exe",
         "zip"
       ]
     },
@@ -51,8 +58,8 @@
       "setProxy.html",
       "locale.js",
       "preload.js",
-      "locales/**/*",
-      "assets/**/*"
+      "locales/*",
+      "assets/*"
     ],
     "extraResources": [
       {
