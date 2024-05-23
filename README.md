@@ -10,6 +10,7 @@
 
 安装依赖包与运行 / Install dependency packages and run:
 
+    # version: npm >= 6.14.6 | node >= v14.6.0
     npm install && npm start
 
 打包命令 / Packaging Commands：
