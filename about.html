@@ -23,11 +23,12 @@
     // 请求语言包数据
     window.electron.requestLocale();
     // 接收并设置语言包数据
-    window.electron.onSetLocale((localeData) => {
+    window.electron.onSetLocale(async (localeData) => {
         $("#title").text(localeData.AppName.label);
         $("#title-heading").text(localeData.AppName.label);
         $("#version").text(localeData.AppName.About.version);
         $("#description").text(localeData.AppName.About.description);
+        $('#version').text(await window.electron.getAppVersion());
     });
 </script>
 

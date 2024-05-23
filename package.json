@@ -57,6 +57,7 @@
       "main.js",
       "package.json",
       "preload.js",
+      "upgrade.js",
       "setProxy.html",
       "locales/**/*",
       "assets/**/*"
@@ -65,13 +66,24 @@
       {
         "from": "assets/**/*",
         "to": "assets/**/*",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ]
   },
   "dependencies": {
+    "electron-log": "^5.1.4",
     "electron-store": "^7.0.3",
+    "electron-updater": "^6.1.8",
     "jquery": "^3.7.1",
     "path-scurry": "^1.11.1"
-  }
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "kumshing-wilson-huang",
+      "repo": "chatgpt-desktop"
+    }
+  ]
 }

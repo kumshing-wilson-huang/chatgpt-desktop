@@ -38,7 +38,7 @@
     },
     "Help": {
         "label": "帮助",
-        "Learn More": "了解更多"
+        "Check for updates": "检查更新"
     },
     "AppName": {
         "title": "ChatGPT Desktop",
@@ -49,7 +49,7 @@
         "quit": "退出 ChatGPT Desktop",
         "About": {
             "version": "版本: 1.0.0",
-            "description": "该应用由金城营造集团 ( wilson.huang@kumshing.com.hk ) 员工开发，但内容版权归于 ChatGPT 所有，本应用只为方便用代理网络使用 ChatGPT 而开发。"
+            "description": "该应用由香港金城营造集团 ( wilson.huang@kumshing.com.hk ) 员工开发，但内容版权归于 ChatGPT 所有，本应用只为方便用代理网络使用 ChatGPT 而开发。"
         }
     },
     "Proxy": {

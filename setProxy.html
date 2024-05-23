@@ -48,6 +48,7 @@
             <select id="proxyType" name="proxyType">
                 <option value="http">HTTP</option>
                 <option value="socks5">SOCKS5</option>
+                <option value="socks4">SOCKS4</option>
             </select>
         </div>
         <div class="form-group">
@@ -75,47 +76,66 @@
     </form>
 
     <script>
-        //console.log(window.electron);
-        // 请求语言包数据
-        window.electron.requestLocale();
-        // 接收并设置语言包数据
-        window.electron.onSetLocale((localeData) => {
-            $('#save').val(localeData.Save);
-            $('#title').text(localeData.Proxy.title);
-            $('#title-heading').text(localeData.Proxy.title);
-            $('#proxyTypeLabel').text(localeData.Proxy.proxyType);
-            $('#proxyUrlLabel').text(localeData.Proxy.proxyUrl);
-            $('#proxyPortLabel').text(localeData.Proxy.proxyPort);
-            $('#proxyDomainLabel').text(localeData.Proxy.proxyDomain);
-            $('#proxyUsernameLabel').text(localeData.Proxy.proxyUsername);
-            $('#proxyPasswordLabel').text(localeData.Proxy.proxyPassword);
+        document.addEventListener('DOMContentLoaded', () => {
+            //console.log(window.electron);
+            // 请求语言包数据
+            window.electron.requestLocale();
+            // 接收并设置语言包数据
+            window.electron.onSetLocale((localeData) => {
+                $('#save').val(localeData.Save);
+                $('#title').text(localeData.Proxy.title);
+                $('#title-heading').text(localeData.Proxy.title);
+                $('#proxyTypeLabel').text(localeData.Proxy.proxyType);
+                $('#proxyUrlLabel').text(localeData.Proxy.proxyUrl);
+                $('#proxyPortLabel').text(localeData.Proxy.proxyPort);
+                $('#proxyDomainLabel').text(localeData.Proxy.proxyDomain);
+                $('#proxyUsernameLabel').text(localeData.Proxy.proxyUsername);
+                $('#proxyPasswordLabel').text(localeData.Proxy.proxyPassword);
 
-            let queryJson = localStorage.getItem("Proxy") || '{}';
-            const Proxy = JSON.parse(queryJson);
-            if (Object.keys(Proxy).length > 0) {
-                $('#proxyType').val(Proxy.proxyType ?? 'http');
-                $('#proxyUrl').val(Proxy.proxyUrl ?? '');
-                $('#proxyPort').val(Proxy.proxyPort ?? '');
-                $('#proxyDomain').val(Proxy.proxyDomain ?? '');
-                $('#proxyUsername').val(Proxy.proxyUsername ?? '');
-                $('#proxyPassword').val(Proxy.proxyPassword ?? '');
-            }
+                function getProxyConfigs() {
+                    return new Promise((resolve, reject) => {
+                        // 这里是获取数据的异步操作，比如从本地存储中读取数据
+                        const data = localStorage.getItem('Proxy');
+                        const Proxy = JSON.parse(data);
+                        if (Proxy !== null) {
+                            resolve(Proxy); // 如果数据存在，则将其作为 Promise 的结果返回
+                        } else {
+                            reject(new Error('Data is not available')); // 如果数据不存在，则返回一个错误
+                        }
+                    });
+                }
 
-            // 表单提交时的事件处理程序
-            $('#proxyForm').submit(function () {
-                let formDataArray = $(this).serializeArray();
-                let formData = {};
-                formDataArray.map(item => {
-                    formData[item.name] = item.value;
-                })                
-                //console.log(formData)
-                localStorage.setItem("Proxy", JSON.stringify(formData));
-                //alert(localeData['Save Success']);
-                window.electron.saveProxyConfigs(formData, () => {
-                    window.electron.showCustomDialog(localeData['Save Success']);
+                // 1秒后加载配置到页面上
+                setTimeout(() => {
+                    let queryJson = localStorage.getItem("Proxy") || '{}';
+                    const Proxy = JSON.parse(queryJson);
+                    if (Object.keys(Proxy).length > 0) {
+                        $('#proxyType').val(Proxy.proxyType ?? 'http');
+                        $('#proxyUrl').val(Proxy.proxyUrl ?? '');
+                        $('#proxyPort').val(Proxy.proxyPort ?? '');
+                        $('#proxyDomain').val(Proxy.proxyDomain ?? '');
+                        $('#proxyUsername').val(Proxy.proxyUsername ?? '');
+                        $('#proxyPassword').val(Proxy.proxyPassword ?? '');
+                    }
+                }, 1000);
+
+
+                // 表单提交时的事件处理程序
+                $('#proxyForm').submit(function () {
+                    let formDataArray = $(this).serializeArray();
+                    let formData = {};
+                    formDataArray.map(item => {
+                        formData[item.name] = item.value;
+                    })
+                    //console.log(formData)
+                    localStorage.setItem("Proxy", JSON.stringify(formData));
+                    //alert(localeData['Save Success']);
+                    window.electron.saveProxyConfigs(formData, () => {
+                        window.electron.showCustomDialog(localeData['Save Success']);
+                    });
+
+                    return false;
                 });
-                
-                return false;
             });
         });
     </script>

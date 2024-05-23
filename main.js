@@ -3,16 +3,20 @@ const { app, BrowserWindow, Menu, ipcMain, dialog, session } = require('electron
 const localeData = require('./locale');
 const preload = path.join(__dirname, 'preload.js');
 const Store = require('electron-store');
+const checkForUpdates = require('./upgrade');
+
 const store = new Store();
-const IS_DEV = false;
+const IS_DEV = true;
 let mainWindow = null;
 let setProxyWindow = null;
 const iconPath = path.join(__dirname, 'assets', 'chatgpt.png');
+
 /*
 // 启用 electron-reload 进行热重载
 require('electron-reload')(__dirname, {
     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 }); */
+
 
 
 // 获取主窗口菜单模板
@@ -65,19 +69,19 @@ function getMenuTemplate() {
                 { role: 'minimize', label: localeData.Window.minimize },
                 { role: 'close', label: localeData.Window.close }
             ]
-        }/* 暂时隐藏了解更多,
+        },
         {
             label: localeData.Help.label,
             submenu: [
                 {
-                    label: localeData.Help['Learn More'],
+                    label: localeData.Help['Check for updates'],
                     click: async () => {
-                        const { shell } = require('electron');
-                        await shell.openExternal('https://electronjs.org');
+                        // 检查更新
+                        checkForUpdates();
                     }
                 }
             ]
-        }*/
+        }
     ];
 
     // 如果是 MacOS，添加应用菜单项
@@ -235,16 +239,38 @@ function createSetProxyWindow() {
 
     setProxyWindow.loadFile('setProxy.html');
 
+    // 设置本地存储的例子
+    setProxyWindow.webContents.on('did-finish-load', () => {
+        let proxyConfig = store.get('proxyConfig');
+        proxyConfig = JSON.stringify(proxyConfig);
+        // console.log(proxyConfig)
+        const script = `
+            localStorage.setItem('Proxy', '${proxyConfig}');
+        `;
+        setProxyWindow.webContents.executeJavaScript(script).then(() => {
+            console.log('LocalStorage set for setProxy.html');
+        }).catch((error) => {
+            console.error('Error setting LocalStorage for setProxy.html:', error);
+        });
+    });
+
     return setProxyWindow;
 }
 
 // 设置代理配置
 async function setProxyConfig(proxyConfig) {
     const { proxyType, proxyUrl, proxyPort, proxyDomain, proxyUsername, proxyPassword } = proxyConfig;
-    const proxyRules = `${proxyType}=${proxyUrl}:${proxyPort};https=${proxyUrl}:${proxyPort}`;
+    let proxyRules;
+
+    // 处理不同类型的代理
+    if (proxyType === 'socks5' || proxyType === 'socks4') {
+        proxyRules = `${proxyType}://${proxyUrl}:${proxyPort}`;
+    } else {
+        proxyRules = `${proxyType}=${proxyUrl}:${proxyPort};https=${proxyUrl}:${proxyPort}`;
+    }
+
     const proxyCredentials = proxyUsername && proxyPassword ? `${proxyUsername}:${proxyPassword}` : null;
 
-    //console.log(proxyRules)
     // 设置代理
     await session.defaultSession.setProxy({
         proxyRules,
@@ -260,7 +286,7 @@ async function setProxyConfig(proxyConfig) {
     }
 
     // 设置完后关闭设置窗口并刷新主窗口webview
-    if(setProxyWindow) {
+    if (setProxyWindow) {
         setProxyWindow.close();
         mainWindow && mainWindow.webContents.reload();
     }
@@ -316,15 +342,22 @@ app.on('ready', () => {
         event.sender.send('save-configs', configs);
     });
 
+    // 获取版本号给渲染进程
+    ipcMain.handle('get-app-version', async () => {
+        return app.getVersion();
+    });
+
     // 设置代理配置
     const proxyConfig = store.get('proxyConfig');
-    //console.log(proxyConfig);
+    // console.log(proxyConfig);
     if(proxyConfig && (Object.keys(proxyConfig).length > 0)) {
         //console.log('setProxyConfig');
         setProxyConfig(proxyConfig);
     }
 
     createWindow();
+    // 检查更新
+    checkForUpdates();
 });
 
 app.on('window-all-closed', () => {
