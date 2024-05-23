@@ -18,6 +18,6 @@
 
 如果需要使用可直接下载已经打包好的 / If you need to use it, you can directly download the packaged version.
 
-[ChatGPT.Desktop.Setup.1.0.6.exe](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases/download/v1.0.6-win/ChatGPT.Desktop.Setup.1.0.6.exe)
+[ChatGPT.Desktop.Setup.1.0.6-win.exe](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases/download/v1.0.6-win/ChatGPT.Desktop.Setup.1.0.6.exe)
 
-[ChatGPT.Desktop-1.0.6.dmg](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases/download/v1.0.6/ChatGPT.Desktop-1.0.6.dmg)
+[ChatGPT.Desktop-1.0.6-mac.dmg](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases/download/v1.0.6/ChatGPT.Desktop-1.0.6.dmg)
