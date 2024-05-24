@@ -1,15 +1,19 @@
 const path = require('path');
 const { app, BrowserWindow, Menu, ipcMain, dialog, session } = require('electron');
 const localeData = require('./locale');
-const preload = path.join(__dirname, 'preload.js');
 const Store = require('electron-store');
 const checkForUpdates = require('./upgrade');
-
+const createAboutWindow = require('./about');
+const { createSetProxyWindow, setProxyConfig } = require('./setProxy');
 const store = new Store();
-const IS_DEV = true;
 let mainWindow = null;
-let setProxyWindow = null;
-const iconPath = path.join(__dirname, 'assets', 'chatgpt.png');
+
+// 挂载全局变量
+global.CONFIGS = {
+    IS_DEV: false,
+    iconPath: path.join(__dirname, 'assets', 'chatgpt.png'),
+    preload: path.join(__dirname, 'preload.js')
+}
 
 /*
 // 启用 electron-reload 进行热重载
@@ -137,20 +141,20 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        icon: iconPath, // 设置图标
+        icon: global.CONFIGS.iconPath, // 设置图标
         title: localeData.AppName.title,
         // fullscreen: true,
         webPreferences: {
-            preload: preload,
+            preload: global.CONFIGS.preload,
             nodeIntegration: true,
             contextIsolation: true,
             webviewTag: true,
-            devTools: (IS_DEV ? true : false)
+            devTools: (global.CONFIGS.IS_DEV ? true : false)
         }
     });
 
     // 打开开发者工具
-    if (IS_DEV) {
+    if (global.CONFIGS.IS_DEV) {
         mainWindow.webContents.openDevTools();
     }
 
@@ -170,127 +174,19 @@ function createWindow() {
     mainWindow.maximize(); // 将窗口最大化
 
     // 加载index.html
-    mainWindow.loadFile('index.html');
+    mainWindow.loadFile('./src/index.html');
 
     // 监听窗口关闭事件
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
 
+    global.CONFIGS.mainWindow = mainWindow;
+
     return mainWindow;
 }
 
-/**
- * 创建关于窗口
- */
-function createAboutWindow() {
-    const windowStatus = (IS_DEV ? true : false);
-    const aboutWindow = new BrowserWindow({
-        width: 500,
-        height: 300,
-        title: 'About',
-        icon: iconPath, // 设置图标
-        autoHideMenuBar: true, // 这里设置为 true 来隐藏菜单栏
-        resizable: windowStatus,  // 禁止调整窗口大小
-        minimizable: windowStatus, // 禁止最小化
-        maximizable: windowStatus, // 禁止最大化
-        webPreferences: {
-            preload: preload,
-            nodeIntegration: true,
-            contextIsolation: true,
-            webviewTag: true,
-            devTools: (IS_DEV ? true : false)
-        }
-    });
 
-    // 打开开发者工具
-    if (IS_DEV) {
-        aboutWindow.webContents.openDevTools();
-    }
-
-    aboutWindow.loadFile('about.html'); // 加载自定义的关于页面
-    return aboutWindow;
-}
-
-function createSetProxyWindow() {
-    const windowStatus = (IS_DEV ? true : false);
-    setProxyWindow = new BrowserWindow({
-        width: 500,
-        height: 300,
-        title: 'Set Proxy',
-        icon: iconPath, // 设置图标
-        resizable: windowStatus,  // 禁止调整窗口大小
-        minimizable: windowStatus, // 禁止最小化
-        maximizable: windowStatus, // 禁止最大化
-        autoHideMenuBar: true, // 这里设置为 true 来隐藏菜单栏
-        webPreferences: {
-            preload: preload,
-            nodeIntegration: true,
-            contextIsolation: true,
-            webviewTag: true,
-            devTools: (IS_DEV ? true : false)
-        }
-    });
-
-    // 打开开发者工具
-    if (IS_DEV) {
-        setProxyWindow.webContents.openDevTools();
-    }
-
-    setProxyWindow.loadFile('setProxy.html');
-
-    // 设置本地存储的例子
-    setProxyWindow.webContents.on('did-finish-load', () => {
-        let proxyConfig = store.get('proxyConfig');
-        proxyConfig = JSON.stringify(proxyConfig);
-        // console.log(proxyConfig)
-        const script = `
-            localStorage.setItem('Proxy', '${proxyConfig}');
-        `;
-        setProxyWindow.webContents.executeJavaScript(script).then(() => {
-            console.log('LocalStorage set for setProxy.html');
-        }).catch((error) => {
-            console.error('Error setting LocalStorage for setProxy.html:', error);
-        });
-    });
-
-    return setProxyWindow;
-}
-
-// 设置代理配置
-async function setProxyConfig(proxyConfig) {
-    const { proxyType, proxyUrl, proxyPort, proxyDomain, proxyUsername, proxyPassword } = proxyConfig;
-    let proxyRules;
-
-    // 处理不同类型的代理
-    if (proxyType === 'socks5' || proxyType === 'socks4') {
-        proxyRules = `${proxyType}://${proxyUrl}:${proxyPort}`;
-    } else {
-        proxyRules = `${proxyType}=${proxyUrl}:${proxyPort};https=${proxyUrl}:${proxyPort}`;
-    }
-
-    const proxyCredentials = proxyUsername && proxyPassword ? `${proxyUsername}:${proxyPassword}` : null;
-
-    // 设置代理
-    await session.defaultSession.setProxy({
-        proxyRules,
-        proxyBypassRules: '<-loopback>'
-    });
-
-    // 如果代理需要认证
-    if (proxyCredentials) {
-        session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-            details.requestHeaders['Proxy-Authorization'] = 'Basic ' + Buffer.from(proxyCredentials).toString('base64');
-            callback({ cancel: false, requestHeaders: details.requestHeaders });
-        });
-    }
-
-    // 设置完后关闭设置窗口并刷新主窗口webview
-    if (setProxyWindow) {
-        setProxyWindow.close();
-        mainWindow && mainWindow.webContents.reload();
-    }
-}
 
 // 在应用就绪时设置Dock图标
 app.on('ready', () => {
@@ -299,7 +195,7 @@ app.on('ready', () => {
     // 设置 Dock 图标
     // console.log(iconPath)
     if (process.platform === 'darwin') {
-        app.dock.setIcon(iconPath);
+        app.dock.setIcon(global.CONFIGS.iconPath);
     }
 
     // 在主进程中监听渲染进程发送的 'request-locale' 事件，并将本地化数据 localeData 发送给渲染进程
@@ -315,7 +211,7 @@ app.on('ready', () => {
         }
         if(!options) options = {};
         if(!options.icon) {
-            options.icon = iconPath;
+            options.icon = global.CONFIGS.iconPath;
         }
         if(!options.type) {
             options.type = 'info';
@@ -366,10 +262,13 @@ app.on('window-all-closed', () => {
     }
 });
 
-
+// 从最小化窗口返回窗口时
 app.on('activate', () => {
+    //console.log('activate');
     // 如果主窗口不存在，则创建主窗口
     if (!mainWindow) {
         createWindow();
     }
+
+    // mainWindow.webContents.reload();
 });

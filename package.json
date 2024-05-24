@@ -1,8 +1,8 @@
 {
   "name": "chatgpt-desktop",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "ChatGPT desktop version that can set up a proxy network",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -36,7 +36,7 @@
     "appId": "hk.com.kumshing.chatgpt-desktop",
     "productName": "ChatGPT Desktop",
     "mac": {
-      "icon": "assets/chatgpt-512x512.png",
+      "icon": "src/assets/chatgpt-512x512.png",
       "category": "public.app-category.productivity",
       "target": [
         "dmg",
@@ -44,27 +44,19 @@
       ]
     },
     "win": {
-      "icon": "assets/chatgpt-512x512.png",
+      "icon": "src/assets/chatgpt-512x512.png",
       "target": [
         "nsis",
         "zip"
       ]
     },
     "files": [
-      "about.html",
-      "index.html",
-      "locale.js",
-      "main.js",
       "package.json",
-      "preload.js",
-      "upgrade.js",
-      "setProxy.html",
-      "locales/**/*",
-      "assets/**/*"
+      "src/**/*"
     ],
     "extraResources": [
       {
-        "from": "assets/**/*",
+        "from": "src/assets/**/*",
         "to": "assets/**/*",
         "filter": [
           "**/*"
@@ -73,6 +65,7 @@
     ]
   },
   "dependencies": {
+    "ajv-keywords": "^3.5.2",
     "electron-log": "^5.1.4",
     "electron-store": "^7.0.3",
     "electron-updater": "^6.1.8",
