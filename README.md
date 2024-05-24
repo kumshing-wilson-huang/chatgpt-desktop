@@ -2,7 +2,8 @@
 
 [![Download Now](https://img.shields.io/badge/-Download%20Now!-%2322A6F2)](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases)
 ![GitHub forks](https://img.shields.io/github/forks/kumshing-wilson-huang/chatgpt-desktop)
-[![ChatGPT-desktop downloads](https://img.shields.io/github/downloads/kumshing-wilson-huang/chatgpt-desktop/total.svg?style=social)](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases)
+[![ChatGPT-desktop downloads](https://img.shields.io/github/downloads/kumshing-wilson-huang/chatgpt-desktop/total.svg?style=flat-square)](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases)
+[![Downloads](https://img.shields.io/npm/dw/chatgpt-desktop)](https://img.shields.io/npm/dw/chatgpt-desktop)
 
 
 - 该应用只为允许使用代理上网去访问ChatGPT而创建
