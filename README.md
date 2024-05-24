@@ -1,6 +1,5 @@
 # ChatGPT desktop version 
 
-![GitHub Release](https://img.shields.io/github/v/release/kumshing-wilson-huang/chatgpt-desktop) 
 ![GitHub forks](https://img.shields.io/github/forks/kumshing-wilson-huang/chatgpt-desktop)
 [![ChatGPT-desktop downloads](https://img.shields.io/github/downloads/kumshing-wilson-huang/chatgpt-desktop/total.svg?style=flat-square)](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases)
 
