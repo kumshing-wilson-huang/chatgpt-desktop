@@ -11,7 +11,7 @@ let mainWindow = null;
 
 // 挂载全局变量
 global.CONFIGS = {
-    IS_DEV: true,
+    IS_DEV: false,
     iconPath: path.join(__dirname, 'assets', 'chatgpt.png'),
     preload: path.join(__dirname, 'preload.js'),
     mainWindow: null,
@@ -265,7 +265,7 @@ app.on('ready', () => {
 
     createWindow();
     // 检查更新
-    checkForUpdates();
+    //checkForUpdates();
 });
 
 app.on('window-all-closed', () => {
