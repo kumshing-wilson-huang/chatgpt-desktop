@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
     <title>ChatGPT Desktop</title>
     <style>
@@ -64,15 +64,17 @@
         <webview id="webview" src="https://chatgpt.com" style="width: 100%; height: 100%;"></webview>
     </div>
     <script>
-        const webview = document.getElementById('webview');
-        const loader = document.getElementById('loader');
-        const content = document.getElementById('content');
+        window.onload = () => {
+            const webview = document.getElementById('webview');
+            const loader = document.getElementById('loader');
+            const content = document.getElementById('content');
 
-        webview.addEventListener('did-finish-load', () => {
-            // 隐藏加载动画，显示主内容
-            loader.style.display = 'none';
-            content.style.display = 'block';
-        });
+            webview.addEventListener('did-finish-load', () => {
+                // 隐藏加载动画，显示主内容
+                loader.style.display = 'none';
+                content.style.display = 'block';
+            });
+        }
     </script>
 </body>
 

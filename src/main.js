@@ -5,14 +5,19 @@ const Store = require('electron-store');
 const checkForUpdates = require('./upgrade');
 const createAboutWindow = require('./about');
 const { createSetProxyWindow, setProxyConfig } = require('./setProxy');
+const utils = require('./utils');
 const store = new Store();
 let mainWindow = null;
 
 // 挂载全局变量
 global.CONFIGS = {
-    IS_DEV: false,
+    IS_DEV: true,
     iconPath: path.join(__dirname, 'assets', 'chatgpt.png'),
-    preload: path.join(__dirname, 'preload.js')
+    preload: path.join(__dirname, 'preload.js'),
+    mainWindow: null,
+    idleTime: 0,
+    IDLE_TIMEOUT: 1800,
+    timer: null
 }
 
 /*
@@ -179,6 +184,13 @@ function createWindow() {
     // 监听窗口关闭事件
     mainWindow.on('closed', () => {
         mainWindow = null;
+        if(global.CONFIGS.timer) clearInterval(global.CONFIGS.timer);
+    });
+
+    // 监听窗口失去焦点事件
+    mainWindow.on('blur', () => {
+        // 开始计算闲置时间，超时时间为1800秒
+        utils.startCheckIdleTimer(mainWindow, 1800);
     });
 
     global.CONFIGS.mainWindow = mainWindow;
@@ -269,6 +281,4 @@ app.on('activate', () => {
     if (!mainWindow) {
         createWindow();
     }
-
-    // mainWindow.webContents.reload();
 });
