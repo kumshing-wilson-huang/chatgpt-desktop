@@ -60,5 +60,11 @@
         "proxyDomain": "Proxy Domain",
         "proxyUsername": "Proxy Username",
         "proxyPassword": "Proxy Password"
+    },
+    "Upgrade": {
+        "title": "Apply Update",
+        "available": "New version {version} found, downloading...",
+        "downloaded": "Update downloaded, will be applied at next startup.",
+        "error": "Error occurred during update: {error}"
     }
 }

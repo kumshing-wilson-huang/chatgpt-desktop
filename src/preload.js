@@ -15,7 +15,6 @@ contextBridge.exposeInMainWorld('electron', {
     onSetLocale: (callback) => {
         // console.log("Setting up locale listener...");
         ipcRenderer.on('set-locale', (event, localeData) => {
-            // console.log("Locale data received in preload:", localeData);
             callback(localeData);
         });
     },

@@ -1,9 +1,10 @@
 /**
- * 工具类
+ * 其它工具类
  *
  * @type {{}}
  */
-const { app, ipcMain } = require('electron');
+const { app, ipcMain, dialog } = require('electron');
+const L = require('./locale');
 
 module.exports = {
     /**
@@ -34,5 +35,34 @@ module.exports = {
                 global.CONFIGS.idleTime = 0; // 刷新页面后重置 idleTime
             }
         }, 1000);
+    },
+
+    /**
+     * 显示自定义的提示框
+     * @param options
+     * @returns {*}
+     */
+    showCustomDialog(options) {
+        if(options && (typeof options == 'string')) {
+            options = { message: options };
+        }
+        if(!options) options = {};
+        if(!options.icon) {
+            options.icon = global.CONFIGS.iconPath;
+        }
+        if(!options.type) {
+            options.type = 'info';
+        }
+        if(!options.title) {
+            options.title = L('Dialog.title');
+        }
+        let buttons = [ L('Dialog.OK') ];
+        if(options.buttons && (options.buttons.length > 0)) {
+            options.buttons = buttons.concat(options.buttons);
+        } else {
+            options.buttons = buttons;
+        }
+        //console.log(options)
+        return dialog.showMessageBox(options);
     }
 }

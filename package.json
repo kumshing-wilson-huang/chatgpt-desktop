@@ -6,7 +6,10 @@
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac"
   },
   "repository": {
     "type": "git",
@@ -34,12 +37,40 @@
   "build": {
     "appId": "hk.com.kumshing.chatgpt-desktop",
     "productName": "ChatGPT Desktop",
+    "squirrelWindows": false,
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications",
+          "name": "Applications"
+        }
+      ]
+    },
     "mac": {
       "icon": "src/assets/chatgpt-512x512.png",
       "category": "public.app-category.productivity",
       "target": [
         "dmg",
         "zip"
+      ],
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "kumshing-wilson-huang",
+          "repo": "chatgpt-desktop",
+          "releaseType": "release"
+        }
       ]
     },
     "win": {
@@ -47,6 +78,14 @@
       "target": [
         "nsis",
         "zip"
+      ],
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "kumshing-wilson-huang",
+          "repo": "chatgpt-desktop",
+          "releaseType": "release"
+        }
       ]
     },
     "files": [
@@ -65,16 +104,11 @@
   },
   "dependencies": {
     "ajv-keywords": "^3.5.2",
+    "electron-log": "^5.1.4",
     "electron-store": "^7.0.3",
     "electron-updater": "^6.1.8",
     "jquery": "^3.7.1",
-    "path-scurry": "^1.11.1"
-  },
-  "publish": [
-    {
-      "provider": "github",
-      "owner": "kumshing-wilson-huang",
-      "repo": "chatgpt-desktop"
-    }
-  ]
+    "path-scurry": "^1.11.1",
+    "update-electron-app": "^3.0.0"
+  }
 }

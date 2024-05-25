@@ -60,5 +60,11 @@
         "proxyDomain": "域",
         "proxyUsername": "用户名",
         "proxyPassword": "密码"
+    },
+    "Upgrade": {
+        "title": "应用更新",
+        "available": "发现新版本 {version}，正在下载...",
+        "downloaded": "更新下载完成，将在下次启动时应用。",
+        "error": "更新过程中出现错误：{error}"
     }
 }
