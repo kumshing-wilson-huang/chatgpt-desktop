@@ -1,4 +1,4 @@
-# ChatGPT desktop version 
+# ChatGPT And DeepSeek desktop version 
 
 [![Download Now](https://img.shields.io/badge/-Download%20Now!-%2322A6F2)](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases)
 [![ChatGPT-desktop downloads](https://img.shields.io/github/downloads/kumshing-wilson-huang/chatgpt-desktop/total.svg?style=flat-square)](https://github.com/kumshing-wilson-huang/chatgpt-desktop/releases)
